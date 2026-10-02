@@ -1,0 +1,25 @@
+# Node
+node_modules/
+dist/
+.vite/
+.vercel/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+scratch/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+*.swp
+*.swo
