@@ -46,13 +46,13 @@ export default function TrackerHUD({ gazeData, soundEnabled }) {
               className="hud-compass-needle"
               style={{
                 transform: `rotate(${angleDeg + 90}deg)`,
-                backgroundColor: isEyeContact ? '#22c55e' : '#ffffff'
+                backgroundColor: isEyeContact ? '#3fae7a' : 'var(--ink)'
               }}
             />
           </div>
           <span className="hud-val">
             {isEyeContact ? (
-              <span style={{ color: '#22c55e', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ color: '#2f8f62', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <Eye size={12} /> DIRECT
               </span>
             ) : (
@@ -61,12 +61,12 @@ export default function TrackerHUD({ gazeData, soundEnabled }) {
           </span>
         </div>
 
-        <div className="hud-item" style={{ borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '10px' }}>
+        <div className="hud-item" style={{ borderLeft: '1px solid var(--line)', paddingLeft: '10px' }}>
           <span>POSE:</span>
           <span className="hud-val">{getDirectionName(angleDeg)}</span>
         </div>
 
-        <div className="hud-item" style={{ borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '10px' }}>
+        <div className="hud-item" style={{ borderLeft: '1px solid var(--line)', paddingLeft: '10px' }}>
           <span>FRAME:</span>
           <span className="hud-val">{isEyeContact ? 'CTR' : `${frameIndex + 1}/63`}</span>
         </div>

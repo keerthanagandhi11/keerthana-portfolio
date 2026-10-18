@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 const NUM_FRAMES = 63;
-const BG_COLOR = '#df0b08';
+const BG_COLOR = '#fce1dc';
 const DIRECTION_FRAME_ANCHORS = [
   [0, 15],
   [Math.PI / 2, 27],
@@ -79,19 +79,26 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
 
     let animationFrameId;
 
+    // Size the canvas to its hero section (not the window) so the page can scroll below it
+    let width = 0;
+    let height = 0;
     const handleResize = () => {
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      ctx.scale(dpr, dpr);
+      width = canvas.clientWidth || window.innerWidth;
+      height = canvas.clientHeight || window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
 
     const render = (now) => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      // Where the canvas sits on screen right now (it scrolls and has a parallax transform)
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = rect.width / width;
+      const scaleY = rect.height / height;
 
       // Delta time in seconds (clamped to prevent jumps after tab blur)
       const dt = Math.min((now - lastTimeRef.current) / 1000, 0.1);
@@ -121,9 +128,11 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
       const faceCenterX = offsetX + renderW * 0.50;
       const faceCenterY = offsetY + renderH * 0.38;
 
-      // Distance from face center
-      const dx = mousePos.current.x - faceCenterX;
-      const dy = mousePos.current.y - faceCenterY;
+      // Distance from face center, with the pointer mapped from viewport into canvas space
+      const pointerX = (mousePos.current.x - rect.left) / scaleX;
+      const pointerY = (mousePos.current.y - rect.top) / scaleY;
+      const dx = pointerX - faceCenterX;
+      const dy = pointerY - faceCenterY;
       const dist = Math.hypot(dx, dy);
 
       // Deadzone calculation with hysteresis to prevent flickering at boundaries
@@ -168,6 +177,12 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
         });
       }
 
+      // Skip painting while the hero is scrolled out of view
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       // Seamless background fill
       ctx.fillStyle = BG_COLOR;
       ctx.fillRect(0, 0, width, height);
@@ -197,7 +212,7 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
       <canvas
         ref={canvasRef}
         className="hero-canvas"
-        style={{ width: '100vw', height: '100vh', display: 'block' }}
+        style={{ width: '100%', height: '100%', display: 'block' }}
       />
     </div>
   );

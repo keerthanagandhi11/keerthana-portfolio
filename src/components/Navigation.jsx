@@ -1,11 +1,21 @@
 import React from 'react';
-import { Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Download } from 'lucide-react';
 import { playHoverSound, playClickSound } from '../utils/audio';
+import { RESUME_URL, RESUME_FILENAME, ROLE } from '../data/profile';
 
-export default function Navigation({ activeModal, setActiveModal, soundEnabled, setSoundEnabled }) {
-  const handleNavClick = (modalName) => {
+export const NAV_SECTIONS = [
+  ['home', 'Home'],
+  ['about', 'About'],
+  ['work', 'Work'],
+  ['journey', 'Journey'],
+  ['contact', 'Contact']
+];
+
+export default function Navigation({ activeSection, isScrolled, soundEnabled, setSoundEnabled }) {
+  const handleNavClick = (event, id) => {
+    event.preventDefault();
     if (soundEnabled) playClickSound();
-    setActiveModal(activeModal === modalName ? null : modalName);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSoundToggle = () => {
@@ -14,40 +24,42 @@ export default function Navigation({ activeModal, setActiveModal, soundEnabled, 
   };
 
   return (
-    <header className="header-container interactive">
+    <header className={`header-container interactive ${isScrolled ? 'scrolled' : ''}`}>
       {/* Brand / Status Pill */}
-      <div className="brand-badge" title="Open to Internships & Projects">
+      <div className="brand-badge" title="Open to AI engineering roles & projects">
         <span className="status-dot"></span>
-        <span>Keerthana Gandhirajan &bull; Aspiring AI Engineer</span>
+        <span>Keerthana<span className="brand-long"> Gandhirajan &bull; {ROLE}</span></span>
       </div>
 
-      {/* Floating Frosted-Glass Navigation Pill Centered */}
+      {/* Section navigation with scroll spy */}
       <nav className="nav-pill-center" aria-label="Main Navigation">
-        <button
-          className={`nav-btn ${activeModal === 'work' ? 'active' : ''}`}
-          onClick={() => handleNavClick('work')}
-          onMouseEnter={() => soundEnabled && playHoverSound()}
-        >
-          [WORK]
-        </button>
-        <button
-          className={`nav-btn ${activeModal === 'about' ? 'active' : ''}`}
-          onClick={() => handleNavClick('about')}
-          onMouseEnter={() => soundEnabled && playHoverSound()}
-        >
-          [ABOUT]
-        </button>
-        <button
-          className={`nav-btn ${activeModal === 'contact' ? 'active' : ''}`}
-          onClick={() => handleNavClick('contact')}
-          onMouseEnter={() => soundEnabled && playHoverSound()}
-        >
-          [CONTACT]
-        </button>
+        {NAV_SECTIONS.map(([id, label]) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            className={`nav-btn ${activeSection === id ? 'active' : ''}`}
+            aria-current={activeSection === id ? 'true' : undefined}
+            onClick={(event) => handleNavClick(event, id)}
+            onMouseEnter={() => soundEnabled && playHoverSound()}
+          >
+            [{label.toUpperCase()}]
+          </a>
+        ))}
       </nav>
 
       {/* Header Actions */}
       <div className="header-actions">
+        <a
+          className="btn-download"
+          href={RESUME_URL}
+          download={RESUME_FILENAME}
+          onClick={() => soundEnabled && playClickSound()}
+          onMouseEnter={() => soundEnabled && playHoverSound()}
+          aria-label="Download resume (PDF)"
+        >
+          <Download size={16} strokeWidth={2.4} />
+          <span>Download<span className="brand-long"> Resume</span></span>
+        </a>
         <button
           className="icon-pill-btn"
           onClick={handleSoundToggle}

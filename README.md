@@ -4,7 +4,7 @@
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/keerthanagandhi11)
 [![Email](https://img.shields.io/badge/Email-keerthanagandhi1104%40gmail.com-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:keerthanagandhi1104@gmail.com)
 
-An interactive portfolio for Keerthana Gandhirajan, a computer operations professional at Kyndryl and MCA student building AI applications in Python. It features a cursor-tracking avatar animated from 63 directional frames.
+An interactive portfolio for Keerthana Gandhirajan, a Gen AI engineer building LLM agents and RAG pipelines in Python, with an enterprise operations background at Kyndryl. It features a cursor-tracking avatar animated from 63 directional frames.
 
 ## Features
 
@@ -14,7 +14,12 @@ An interactive portfolio for Keerthana Gandhirajan, a computer operations profes
 - Resume, projects, about, and contact sections populated from Keerthana's resume and LinkedIn profile
 - Six project cards with Situation, Task, Action, and Result details
 - Web Audio API hover feedback
-- Canvas renderer using `requestAnimationFrame`
+- Canvas renderer using `requestAnimationFrame`, scroll-aware so tracking keeps working as the page scrolls
+- Pastel blush theme with recoloured avatar frames
+- Download Resume button (serves `public/Keerthana_Gandhirajan_Resume.pdf`)
+- Scrolling home page: parallax hero, scroll progress bar, scroll-spy navigation, counting stats,
+  velocity skills marquee, project slider (arrows, drag, swipe, dots, autoplay), drawing timeline,
+  certifications, contact band and back-to-top ring
 
 ## Tech Stack
 
@@ -44,6 +49,9 @@ npm run dev
 │   │   ├── Navigation.jsx       # Main navigation
 │   │   ├── HeroContent.jsx      # Hero copy and calls to action
 │   │   ├── TrackerHUD.jsx       # Direction telemetry and social links
+│   │   ├── Sections.jsx         # Scroll sections and project slider
 │   │   └── Modals.jsx           # Projects, about, contact, and resume
+│   ├── data/
+│   │   └── profile.js           # Shared portfolio content
 │   └── index.css
 ```

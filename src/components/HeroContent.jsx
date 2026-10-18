@@ -11,10 +11,10 @@ export default function HeroContent({ onOpenModal, soundEnabled }) {
       {/* Name */}
       <h1 className="hero-name">Keerthana</h1>
 
-      {/* Compact 3-line bio from resume */}
+      {/* Compact 3-line technical bio */}
       <p className="hero-bio">
-        Computer operations professional at Kyndryl and MCA student building AI applications
-        in Python. Exploring <strong>agentic AI, RAG, and LLM workflows</strong>.
+        I engineer <strong>LLM agents and RAG pipelines</strong> in Python: LangGraph state graphs,
+        tool calling over MCP, and vector search. Production ops background at Kyndryl.
       </p>
 
       {/* Two Stylish White Pill Buttons */}
