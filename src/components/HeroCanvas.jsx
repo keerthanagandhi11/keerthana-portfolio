@@ -64,12 +64,12 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
 
     // Load the 63 supplied avatar frames
     for (let i = 0; i < NUM_FRAMES; i++) {
-      loadFrame(`/avatar_frames/frame_${i}.jpg`, (frame) => { images[i] = frame; });
+      loadFrame(`${import.meta.env.BASE_URL}avatar_frames/frame_${i}.jpg`, (frame) => { images[i] = frame; });
     }
     framesRef.current = images;
 
     // Load center neutral frame
-    loadFrame('/character_image_corrected.png', (frame) => { centerFrameRef.current = frame; });
+    loadFrame(`${import.meta.env.BASE_URL}character_image_corrected.png`, (frame) => { centerFrameRef.current = frame; });
   }, [setIsLoaded]);
 
   // 2. High-performance 60 FPS RequestAnimationFrame Canvas Loop

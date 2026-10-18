@@ -7,7 +7,7 @@ export const PHONE = '+91 70107 21178';
 export const PHONE_HREF = 'tel:+917010721178';
 
 // Served from public/; replace that file to update the resume.
-export const RESUME_URL = '/Keerthana_Gandhirajan_Resume.pdf';
+export const RESUME_URL = `${import.meta.env.BASE_URL}Keerthana_Gandhirajan_Resume.pdf`;
 export const RESUME_FILENAME = 'Keerthana_Gandhirajan_Resume.pdf';
 
 export const ROLE = 'Gen AI Engineer';
