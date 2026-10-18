@@ -103,7 +103,7 @@ function AboutContent() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px' }}>
         <div style={{ ...panelStyle, textAlign: 'center' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800, fontFamily: 'var(--font-display)' }}>6</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, fontFamily: 'var(--font-display)' }}>{projects.length}</div>
           <div style={{ fontSize: '0.76rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Selected Projects</div>
         </div>
         <div style={{ ...panelStyle, textAlign: 'center' }}>

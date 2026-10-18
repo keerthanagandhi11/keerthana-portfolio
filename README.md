@@ -12,7 +12,7 @@ An interactive portfolio for Keerthana Gandhirajan, a Gen AI engineer building L
 - Center eye-contact state
 - Frosted-glass navigation and portfolio modals
 - Resume, projects, about, and contact sections populated from Keerthana's resume and LinkedIn profile
-- Six project cards with Situation, Task, Action, and Result details
+- Seven project cards with Situation, Task, Action, and Result details
 - Web Audio API hover feedback
 - Canvas renderer using `requestAnimationFrame`, scroll-aware so tracking keeps working as the page scrolls
 - Pastel blush theme with recoloured avatar frames
