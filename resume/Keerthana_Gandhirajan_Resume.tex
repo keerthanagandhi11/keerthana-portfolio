@@ -1,0 +1,221 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Keerthana Gandhirajan} \\ \vspace{1pt}
+    \small Gen AI \& Agentic AI Engineer $|$ LLM \& RAG $|$ Python $|$ Chennai, India \\ \vspace{1pt}
+    \small +91 70107 21178 $|$ \href{mailto:keerthanagandhi1104@gmail.com}{\underline{keerthanagandhi1104@gmail.com}} $|$
+    \href{https://www.linkedin.com/in/keerthana-gandhi13aa64282}{\underline{linkedin.com/in/keerthana-gandhi13aa64282}} $|$
+    \href{https://github.com/keerthanagandhi11}{\underline{github.com/keerthanagandhi11}}
+    % Add your live portfolio once deployed:  $|$ \href{https://YOUR-PORTFOLIO-URL}{\underline{Portfolio}}
+\end{center}
+
+
+%-----------SUMMARY-----------
+\section{Summary}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     Gen AI and Agentic AI engineer building RAG systems and tool-calling LLM agents in Python. Shipped OpsPilot, an agentic
+     RAG app that cites and checks its answers. At Kyndryl, working on workload automation and a mainframe-to-UAC migration.
+    }}
+ \end{itemize}
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{OpsPilot: Agentic RAG for Incident PDFs} $|$ \emph{Python, Groq, FastAPI, Gradio, Docker}}{}
+          \resumeItemListStart
+            \resumeItem{Built a gpt-oss-120b agent that decides what to search, calls 4 tools over up to 3 rounds and cites file and page}
+            \resumeItem{Combined BM25 keyword search with bge-small embeddings using Reciprocal Rank Fusion; the right page was in the top 3 results for 18/18 test questions (17/18 with keywords alone)}
+            \resumeItem{Added hallucination guardrails: a second LLM call checks each claim against the cited pages, and the agent says ``not found'' instead of guessing (refused 5/5 unanswerable questions)}
+            \resumeItem{Scored 18/18 correct answers with the right page cited in 18/18 on a 23-question eval set I wrote; median response time 2.2 s}
+            \resumeItem{Deployed on Render with Docker and FastAPI, with rate limiting, GitHub Actions CI and 72 automated tests}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{IT Operations AI Agent} $|$ \emph{Python, LangGraph, Claude API, Model Context Protocol (MCP)}}{}
+          \resumeItemListStart
+            \resumeItem{Built a LangGraph workflow on the Claude API that routes each ops request to the right tool via function calling}
+            \resumeItem{Wrote 2 MCP tools (job-status checks, issue triage) and split the work across subagents, one per step}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{RAG PDF Chatbot} $|$ \emph{Python, LangChain, Claude API, Embeddings, Vector Database}}{}
+          \resumeItemListStart
+            \resumeItem{Built the full pipeline: extract PDF text, chunk it, embed it and store it in a vector database}
+            \resumeItem{Used LangChain to fetch the closest chunks and prompted Claude to answer only from them}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Additional Projects} $|$ \emph{Python, REST APIs, SQL, NLP}}{}
+          \resumeItemListStart
+            \resumeItem{\textbf{Job Notification API:} REST backend that sends real-time job alerts filtered by role, location and keywords}
+            \resumeItem{\textbf{X Sentiment Analysis:} pulled posts from the X API, cleaned the text and labeled each one positive, negative or neutral}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Kyndryl}{Jun 2025 -- Present}
+      {Computer Operations Representative}{Full-time, On-site}
+      \resumeItemListStart
+        \resumeItem{Helped migrate legacy mainframe batch jobs to Stonebranch UAC, checking job definitions, schedules and dependencies}
+        \resumeItem{Worked on automated job workflows in UAC that cut manual steps out of recurring batch runs}
+        \resumeItem{Monitored enterprise workloads, fixed failed jobs using runbooks and escalated incidents to the right support team}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages \& CS}{: Python, Java, SQL, Object-Oriented Programming, Data Structures \& Algorithms, Git/GitHub} \\
+     \textbf{Gen AI \& LLMs}{: Generative AI, Multimodal AI, OpenAI API, Claude API, Hugging Face, Fine-Tuning, Prompt Engineering} \\
+     \textbf{Agentic AI}{: Tool Calling, Multi-Agent Systems, Subagents, LangGraph, MCP, Google ADK, CrewAI, AutoGen} \\
+     \textbf{RAG \& Vector DBs}{: Agentic RAG, Hybrid Search, Embeddings, LangChain, LlamaIndex, ChromaDB, Pinecone, FAISS} \\
+     \textbf{Evaluation \& Safety}{: RAGAS, Eval Sets, LLM-as-Judge, Guardrails, Hallucination Mitigation, LangSmith (Observability)} \\
+     \textbf{ML \& Data}{: Machine Learning, NLP, PyTorch, TensorFlow, MongoDB, SQL Databases, Data Visualization} \\
+     \textbf{Backend \& Cloud}{: FastAPI, Flask, Django, REST APIs, Gradio, Streamlit, Docker, AWS, GitHub Actions CI/CD, pytest} \\
+     \textbf{Automation \& Ops}{: Stonebranch UAC, Mainframe Modernization, Workload Automation, n8n, Runbooks, Incident Triage}
+    }}
+ \end{itemize}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Bharathidasan University}{Tiruchirappalli, India}
+      {Master of Computer Applications (MCA)}{Jul 2025 -- Jul 2027 (expected)}
+    \resumeSubheading
+      {SASTRA}{Thanjavur, India}
+      {Bachelor of Computer Applications (BCA)}{Sep 2022 -- Jul 2025}
+  \resumeSubHeadingListEnd
+
+
+%-----------CERTIFICATIONS-----------
+\section{Certifications}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Kyndryl AI Agent OPS Specialist Program}{ (manager-nominated, in progress)} \\
+     \textbf{AI at Kyndryl: Mainframe Modernization} \\
+     \textbf{IBM RAG \& Agentic AI Certification}{ (in progress)} $|$ \textbf{Meta Back-End Developer Professional Certificate}{ (2024)}
+    }}
+ \end{itemize}
+
+
+%-------------------------------------------
+\end{document}
