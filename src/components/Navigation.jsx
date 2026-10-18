@@ -6,6 +6,7 @@ import { RESUME_URL, RESUME_FILENAME, ROLE } from '../data/profile';
 export const NAV_SECTIONS = [
   ['home', 'Home'],
   ['about', 'About'],
+  ['approach', 'Agents'],
   ['work', 'Work'],
   ['journey', 'Journey'],
   ['contact', 'Contact']
@@ -26,7 +27,7 @@ export default function Navigation({ activeSection, isScrolled, soundEnabled, se
   return (
     <header className={`header-container interactive ${isScrolled ? 'scrolled' : ''}`}>
       {/* Brand / Status Pill */}
-      <div className="brand-badge" title="Open to AI engineering roles & projects">
+      <div className="brand-badge" title="Open to Gen AI & Agentic AI roles">
         <span className="status-dot"></span>
         <span>Keerthana<span className="brand-long"> Gandhirajan &bull; {ROLE}</span></span>
       </div>
@@ -51,6 +52,7 @@ export default function Navigation({ activeSection, isScrolled, soundEnabled, se
       <div className="header-actions">
         <a
           className="btn-download"
+          data-magnetic
           href={RESUME_URL}
           download={RESUME_FILENAME}
           onClick={() => soundEnabled && playClickSound()}

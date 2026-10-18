@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useGaze } from '../utils/gazeStore';
 
-export default function CustomCursor({ isEyeContact }) {
+export default function CustomCursor() {
+  const { isEyeContact } = useGaze();
   const dotRef = useRef(null);
   const ringRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -22,7 +24,7 @@ export default function CustomCursor({ isEyeContact }) {
 
       // Check if hovering interactive element
       const target = e.target;
-      const isInteractive = target && (
+      const isInteractive = target instanceof Element && (
         target.tagName === 'BUTTON' ||
         target.tagName === 'A' ||
         target.tagName === 'INPUT' ||

@@ -47,28 +47,29 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
       }
     };
 
-    // Load the 63 supplied avatar frames
-    for (let i = 0; i < NUM_FRAMES; i++) {
+    // Decode every frame up front into an ImageBitmap so drawing a new pose never stalls on JPEG decoding
+    const loadFrame = (src, store) => {
       const img = new Image();
-      img.src = `/avatar_frames/frame_${i}.jpg`;
-      img.onload = handleLoad;
+      img.src = src;
+      img.onload = () => {
+        store(img);
+        const decoded = window.createImageBitmap ? createImageBitmap(img) : img.decode().then(() => img);
+        decoded.then(store, () => {}).finally(handleLoad);
+      };
       img.onerror = () => {
-        console.warn(`Failed to load avatar frame_${i}.jpg`);
+        console.warn(`Failed to load avatar image ${src}`);
         handleLoad();
       };
-      images.push(img);
+    };
+
+    // Load the 63 supplied avatar frames
+    for (let i = 0; i < NUM_FRAMES; i++) {
+      loadFrame(`/avatar_frames/frame_${i}.jpg`, (frame) => { images[i] = frame; });
     }
     framesRef.current = images;
 
     // Load center neutral frame
-    const centerImg = new Image();
-    centerImg.src = '/character_image_corrected.png';
-    centerImg.onload = handleLoad;
-    centerImg.onerror = () => {
-      console.warn('Failed to load front-facing avatar image');
-      handleLoad();
-    };
-    centerFrameRef.current = centerImg;
+    loadFrame('/character_image_corrected.png', (frame) => { centerFrameRef.current = frame; });
   }, [setIsLoaded]);
 
   // 2. High-performance 60 FPS RequestAnimationFrame Canvas Loop
@@ -82,7 +83,9 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
     // Size the canvas to its hero section (not the window) so the page can scroll below it
     let width = 0;
     let height = 0;
+    let lastDrawn = null;
     const handleResize = () => {
+      lastDrawn = null;
       const dpr = window.devicePixelRatio || 1;
       width = canvas.clientWidth || window.innerWidth;
       height = canvas.clientHeight || window.innerHeight;
@@ -158,16 +161,16 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
       while (diff < -Math.PI) diff += 2 * Math.PI;
       while (diff > Math.PI) diff -= 2 * Math.PI;
 
-      // Smooth lerp factor (~35ms response time, framerate independent)
-      const lerpFactor = 1 - Math.exp(-18 * dt);
+      // Smooth lerp factor (~25ms response time, framerate independent)
+      const lerpFactor = 1 - Math.exp(-40 * dt);
       currentAngleRef.current += diff * lerpFactor;
       currentAngleRef.current = (currentAngleRef.current + 2 * Math.PI) % (2 * Math.PI);
 
       // Calibrated to the supplied sequence's right, down, left, and up poses.
       const frameIndex = getFrameIndexForAngle(currentAngleRef.current);
 
-      // Throttled telemetry update (~15fps) to prevent React re-render overhead
-      if (onGazeUpdate && now - lastThrottleTimeRef.current > 66) {
+      // Throttled telemetry update (~20fps); only the HUD and cursor subscribe to it
+      if (onGazeUpdate && now - lastThrottleTimeRef.current > 50) {
         lastThrottleTimeRef.current = now;
         onGazeUpdate({
           angleDeg: Math.round((currentAngleRef.current * 180) / Math.PI),
@@ -183,17 +186,16 @@ export default function HeroCanvas({ mousePos, onGazeUpdate, isLoaded, setIsLoad
         return;
       }
 
-      // Seamless background fill
-      ctx.fillStyle = BG_COLOR;
-      ctx.fillRect(0, 0, width, height);
-
-      // Draw EXACTLY ONE crisp frame at 100% opacity
+      // Draw EXACTLY ONE crisp frame at 100% opacity, and only when the pose actually changed
       const frameToDraw = isEyeContact
         ? centerFrameRef.current
         : framesRef.current[frameIndex];
 
-      if (frameToDraw && frameToDraw.complete && frameToDraw.naturalWidth > 0) {
+      if (frameToDraw && frameToDraw !== lastDrawn && (frameToDraw.width || frameToDraw.naturalWidth)) {
+        ctx.fillStyle = BG_COLOR;
+        ctx.fillRect(0, 0, width, height);
         ctx.drawImage(frameToDraw, offsetX, offsetY, renderW, renderH);
+        lastDrawn = frameToDraw;
       }
 
       animationFrameId = requestAnimationFrame(render);

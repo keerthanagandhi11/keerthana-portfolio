@@ -49,6 +49,13 @@ function ProjectGrid() {
           <div className="project-tech">
             {project.tech.map((tech) => <span className="tech-badge" key={tech}>{tech}</span>)}
           </div>
+          {project.links && (
+            <div className="slide-links">
+              {project.links.map(([label, href]) => (
+                <a key={href} href={href} target="_blank" rel="noopener noreferrer">{label} <ArrowUpRight size={13} /></a>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -59,10 +66,12 @@ function AboutContent() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
       <p style={{ fontSize: '1.02rem', lineHeight: 1.65, color: 'var(--text-body)' }}>
-        I'm <strong>Keerthana Gandhirajan</strong>, a Python developer building LLM-powered systems:
-        LangGraph agents that call tools over MCP, retrieval-augmented generation pipelines on vector
-        databases, and NLP classifiers. I run enterprise batch workload operations at Kyndryl and am
-        completing an MCA, so I design for how AI behaves in production, not just in a notebook.
+        I'm <strong>Keerthana Gandhirajan</strong>, a Gen AI engineer focused on agentic AI. I build
+        tool-calling LLM agents and agentic RAG systems in Python: LangGraph state graphs and custom
+        plan-act-verify loops, MCP tool servers, hybrid BM25 + embedding retrieval with Reciprocal Rank
+        Fusion, and claim-level self-verification. My latest system, OpsPilot, is live with page-level
+        citations and a three-tier fallback chain. I run enterprise batch workload operations at Kyndryl
+        and am completing an MCA, so I design for how AI behaves in production, not just in a notebook.
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
@@ -86,7 +95,7 @@ function AboutContent() {
             <strong style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>Current Learning</strong>
           </div>
           <p style={{ fontSize: '0.88rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-            Nominated by management to Kyndryl's AI Agent OPS Specialist Skilling Program (agent
+            In progress: Kyndryl's AI Agent OPS Specialist Skilling Program (manager-nominated, agent
             operations in production) and pursuing IBM's RAG and Agentic AI Professional Certification.
           </p>
         </div>
@@ -143,7 +152,7 @@ function ResumeContent({ soundEnabled }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div style={panelStyle}>
         <h3 style={{ fontSize: '1.3rem', fontWeight: 700 }}>Keerthana Gandhirajan</h3>
-        <p style={{ color: 'var(--text-dim)', marginTop: '4px' }}>{ROLE} · LLM agents, RAG, NLP · Chennai, Tamil Nadu</p>
+        <p style={{ color: 'var(--text-dim)', marginTop: '4px' }}>{ROLE} · Agentic AI · RAG · Tool calling · Chennai, Tamil Nadu</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px', flexWrap: 'wrap' }}>
           <a href={'mailto:' + EMAIL} style={{ color: 'var(--text-body)', textDecoration: 'underline' }}>{EMAIL}</a>
           <a href={PHONE_HREF} style={{ color: 'var(--text-body)', textDecoration: 'underline' }}>{PHONE}</a>

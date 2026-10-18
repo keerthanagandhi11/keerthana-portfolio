@@ -7,6 +7,7 @@ import CustomCursor from './components/CustomCursor';
 import Modals from './components/Modals';
 import Sections from './components/Sections';
 import { playEyeContactSound } from './utils/audio';
+import { gazeStore } from './utils/gazeStore';
 
 const RING_LENGTH = 138.2; // circumference of the back-to-top progress ring (r = 22)
 
@@ -17,12 +18,6 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [showTop, setShowTop] = useState(false);
-  const [gazeData, setGazeData] = useState({
-    angleDeg: 0,
-    frameIndex: 0,
-    isEyeContact: false,
-    dist: 0
-  });
 
   const mousePosRef = useRef({
     x: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 500,
@@ -30,6 +25,8 @@ export default function App() {
   });
 
   const prevEyeContactRef = useRef(false);
+  const soundRef = useRef(soundEnabled);
+  soundRef.current = soundEnabled;
   const progressRef = useRef(null);
   const ringRef = useRef(null);
   const heroRef = useRef(null);
@@ -54,6 +51,32 @@ export default function App() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
     };
+  }, []);
+
+  // Magnetic buttons: elements marked data-magnetic lean toward a nearby mouse pointer
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame = 0;
+    let point = null;
+    const apply = () => {
+      frame = 0;
+      document.querySelectorAll('[data-magnetic]').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = point.x - cx;
+        const dy = point.y - cy;
+        const reach = Math.max(r.width, r.height) / 2 + 40;
+        const near = Math.hypot(dx, dy) < reach;
+        el.style.transform = near ? `translate(${dx * 0.22}px, ${dy * 0.3}px)` : '';
+      });
+    };
+    const onMove = (e) => {
+      point = { x: e.clientX, y: e.clientY };
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(frame); };
   }, []);
 
   // One scroll loop drives progress, header state, scroll spy, hero parallax and the timeline
@@ -123,16 +146,19 @@ export default function App() {
     };
   }, []);
 
-  // Handle gaze updates from 60fps canvas loop
+  // Handle gaze updates from the canvas loop without re-rendering the page:
+  // the HUD and cursor read them from the gaze store.
   const handleGazeUpdate = useCallback((data) => {
-    setGazeData(data);
+    gazeStore.set(data);
 
     // Audio cue on entering eye contact deadzone
-    if (data.isEyeContact && !prevEyeContactRef.current && soundEnabled) {
+    if (data.isEyeContact && !prevEyeContactRef.current && soundRef.current) {
       playEyeContactSound();
     }
     prevEyeContactRef.current = data.isEyeContact;
-  }, [soundEnabled]);
+  }, []);
+
+  const openModal = useCallback((modal) => setActiveModal(modal), []);
 
   return (
     <>
@@ -169,7 +195,6 @@ export default function App() {
                 soundEnabled={soundEnabled}
               />
               <TrackerHUD
-                gazeData={gazeData}
                 soundEnabled={soundEnabled}
               />
             </div>
@@ -178,7 +203,7 @@ export default function App() {
         </section>
 
         {/* 3. Scroll sections */}
-        <Sections soundEnabled={soundEnabled} onOpenModal={(modal) => setActiveModal(modal)} />
+        <Sections soundEnabled={soundEnabled} onOpenModal={openModal} />
       </main>
 
       {/* Back to top with progress ring */}
@@ -202,7 +227,7 @@ export default function App() {
       />
 
       {/* 5. Luxury Custom Magnetic Cursor */}
-      <CustomCursor isEyeContact={gazeData.isEyeContact} />
+      <CustomCursor />
 
       {/* 6. Sleek Preloader Overlay */}
       {!isLoaded && (

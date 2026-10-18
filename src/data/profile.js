@@ -11,8 +11,33 @@ export const RESUME_URL = '/Keerthana_Gandhirajan_Resume.pdf';
 export const RESUME_FILENAME = 'Keerthana_Gandhirajan_Resume.pdf';
 
 export const ROLE = 'Gen AI Engineer';
+export const ROLE_FOCUS = 'Gen AI & Agentic AI roles';
+
+// Rotating specialisms in the hero
+export const SPECIALISMS = [
+  'agentic RAG systems',
+  'LangGraph state machines',
+  'MCP tool servers',
+  'hybrid retrieval pipelines',
+  'self-verifying LLM agents'
+];
 
 export const projects = [
+  {
+    tag: 'Agentic RAG · Tool Calling · Self-Verification',
+    name: 'OpsPilot: Agentic RAG for Incident PDFs',
+    featured: true,
+    summary: 'An agentic RAG system that plans retrieval over incident PDFs, cites every fact to a file and page, and verifies its own answer before responding.',
+    situation: 'After an incident, facts are scattered across reports, shift logs and post-mortems, and general chatbots can produce plausible but ungrounded answers.',
+    task: 'Ship a free, deployable assistant that answers incident questions with page-level citations, refuses when evidence is missing, and degrades gracefully when the LLM is unavailable.',
+    action: 'Wrote a custom plan → act → answer → verify tool-calling loop on gpt-oss-120b (Groq, OpenAI-compatible API) with four tools: search_documents, read_page, find_timeline and list_documents. Retrieval is hybrid: BM25 keyword search plus bge-small-en-v1.5 embeddings (fastembed / ONNX on CPU), merged with Reciprocal Rank Fusion over page-bounded 900-character chunks with 150-character overlap. Every retrieved page gets a stable source id; a separate verifier call checks each claim against the cited pages and feeds unsupported claims back for one revision. Served through FastAPI with a Gradio 6 chat that streams each agent step live.',
+    result: 'A live, MIT-licensed app on Render with grounded, cited answers, an explicit NOT_FOUND refusal, a three-tier fallback (agent → single-shot RAG → quote mode), per-visitor rate limiting, in-memory PDF handling, Docker, GitHub Actions CI and an offline pytest suite.',
+    tech: ['Agentic RAG', 'Tool calling', 'gpt-oss-120b / Groq', 'Hybrid search (BM25 + embeddings)', 'Reciprocal Rank Fusion', 'Self-verification', 'FastAPI', 'Gradio', 'Docker', 'GitHub Actions', 'pytest'],
+    links: [
+      ['Live demo', 'https://opspilot-7mqm.onrender.com'],
+      ['Source', 'https://github.com/keerthanagandhi11/opspilot']
+    ]
+  },
   {
     tag: 'Agentic AI · LangGraph · MCP',
     name: 'IT Operations AI Agent',
@@ -76,12 +101,12 @@ export const projects = [
 ];
 
 export const skillGroups = [
-  ['Programming', 'Python', 'Java', 'SQL', 'OOP', 'Data structures and algorithms'],
-  ['ML and NLP', 'Machine learning', 'NLP', 'Sentiment analysis', 'PyTorch', 'TensorFlow', 'scikit-learn'],
-  ['LLMs and agents', 'Generative AI', 'Prompt engineering', 'Claude API', 'Tool calling', 'Multi-agent systems', 'MCP'],
-  ['RAG and frameworks', 'RAG', 'Embeddings', 'Semantic search', 'Vector databases', 'LangChain', 'LangGraph', 'LlamaIndex', 'CrewAI', 'AutoGen'],
-  ['Application stack', 'REST APIs', 'FastAPI', 'Flask', 'Django', 'Streamlit', 'Gradio', 'MongoDB', 'Pinecone', 'FAISS'],
-  ['Engineering practice', 'Testing', 'Deployment', 'Monitoring', 'Debugging', 'Docker', 'Git', 'GitHub']
+  ['LLM orchestration & agents', 'Generative AI', 'Agentic AI', 'Tool calling', 'LangGraph', 'Multi-agent systems', 'Subagents', 'MCP', 'Claude API', 'OpenAI-compatible APIs', 'Groq', 'Prompt engineering'],
+  ['Retrieval & RAG', 'RAG', 'Agentic RAG', 'Embeddings', 'Semantic search', 'BM25', 'Reciprocal Rank Fusion', 'Chunking strategies', 'Vector databases', 'Pinecone', 'FAISS', 'LangChain', 'LlamaIndex'],
+  ['Reliability & evaluation', 'Self-verification', 'Grounded citations', 'Fallback chains', 'Rate limiting', 'Input validation', 'pytest'],
+  ['Serving & data', 'FastAPI', 'Gradio', 'Streamlit', 'REST API design', 'Pydantic', 'Flask', 'Django', 'MongoDB', 'SQL'],
+  ['ML & NLP', 'NLP', 'Sentiment analysis', 'fastembed / ONNX Runtime', 'PyTorch', 'TensorFlow', 'scikit-learn'],
+  ['Engineering', 'Python', 'Java', 'Docker', 'GitHub Actions CI', 'Ruff', 'Git', 'Data structures and algorithms']
 ];
 
 export const experience = {

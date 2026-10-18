@@ -20,6 +20,10 @@ An interactive portfolio for Keerthana Gandhirajan, a Gen AI engineer building L
 - Scrolling home page: parallax hero, scroll progress bar, scroll-spy navigation, counting stats,
   velocity skills marquee, project slider (arrows, drag, swipe, dots, autoplay), drawing timeline,
   certifications, contact band and back-to-top ring
+- OpsPilot (agentic RAG) featured first in the project slider, with live demo and source links
+- "How I build agents" section: animated plan → tool calls → cite → verify loop and a typing code panel
+- Hero specialism typewriter, magnetic buttons, 3D tilt project cards and word-by-word section titles
+- Gaze telemetry kept in a small external store so cursor tracking never re-renders the page
 
 ## Tech Stack
 
@@ -50,6 +54,7 @@ npm run dev
 │   │   ├── HeroContent.jsx      # Hero copy and calls to action
 │   │   ├── TrackerHUD.jsx       # Direction telemetry and social links
 │   │   ├── Sections.jsx         # Scroll sections and project slider
+│   │   ├── AgentPipeline.jsx    # Animated agent-loop diagram and code panel
 │   │   └── Modals.jsx           # Projects, about, contact, and resume
 │   ├── data/
 │   │   └── profile.js           # Shared portfolio content

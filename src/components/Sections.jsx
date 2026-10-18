@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Copy, Check, Download, Mail } from 'lucide-react';
 import { playHoverSound, playClickSound } from '../utils/audio';
+import AgentPipeline from './AgentPipeline';
 import {
-  EMAIL, LINKEDIN, GITHUB, RESUME_URL, RESUME_FILENAME,
+  EMAIL, LINKEDIN, GITHUB, RESUME_URL, RESUME_FILENAME, ROLE_FOCUS,
   projects, skillGroups, experience, education, certifications
 } from '../data/profile';
 
@@ -29,6 +30,35 @@ function useReveal() {
     });
     return () => observer.disconnect();
   }, []);
+}
+
+// Section title whose words rise in one after another when the section reveals
+function SplitTitle({ children }) {
+  return (
+    <h2 className="block-title split-title">
+      {children.split(' ').map((word, i) => (
+        <span className="word" key={i}><span style={{ '--w': i }}>{word}</span></span>
+      ))}
+    </h2>
+  );
+}
+
+// 3D tilt with a moving glare, mouse only
+function tilt(e) {
+  if (e.pointerType !== 'mouse') return;
+  const card = e.currentTarget;
+  const r = card.getBoundingClientRect();
+  const px = (e.clientX - r.left) / r.width;
+  const py = (e.clientY - r.top) / r.height;
+  card.style.setProperty('--ry', `${(px - 0.5) * 10}deg`);
+  card.style.setProperty('--rx', `${(0.5 - py) * 8}deg`);
+  card.style.setProperty('--gx', `${px * 100}%`);
+  card.style.setProperty('--gy', `${py * 100}%`);
+}
+function untilt(e) {
+  const card = e.currentTarget;
+  card.style.setProperty('--rx', '0deg');
+  card.style.setProperty('--ry', '0deg');
 }
 
 function CountUp({ value }) {
@@ -212,10 +242,10 @@ function ProjectSlider({ soundEnabled, onOpenModal }) {
           <b>{String(index + 1).padStart(2, '0')}</b> / {String(total).padStart(2, '0')}
         </div>
         <div className="slider-arrows">
-          <button className="slider-arrow" onClick={() => step(-1)} onMouseEnter={() => soundEnabled && playHoverSound()} aria-label="Previous project">
+          <button className="slider-arrow" data-magnetic onClick={() => step(-1)} onMouseEnter={() => soundEnabled && playHoverSound()} aria-label="Previous project">
             <ArrowLeft size={18} />
           </button>
-          <button className="slider-arrow" onClick={() => step(1)} onMouseEnter={() => soundEnabled && playHoverSound()} aria-label="Next project">
+          <button className="slider-arrow" data-magnetic onClick={() => step(1)} onMouseEnter={() => soundEnabled && playHoverSound()} aria-label="Next project">
             <ArrowRight size={18} />
           </button>
         </div>
@@ -238,8 +268,16 @@ function ProjectSlider({ soundEnabled, onOpenModal }) {
         }}
       >
         {projects.map((project, i) => (
-          <article className={`slide-card ${openCard === i ? 'open' : ''} ${index === i ? 'current' : ''}`} key={project.name}>
-            <div className="slide-num">{String(i + 1).padStart(2, '0')}</div>
+          <article
+            className={`slide-card ${openCard === i ? 'open' : ''} ${index === i ? 'current' : ''} ${project.featured ? 'featured' : ''}`}
+            key={project.name}
+            onPointerMove={tilt}
+            onPointerLeave={untilt}
+          >
+            <div className="slide-top">
+              <div className="slide-num">{String(i + 1).padStart(2, '0')}</div>
+              {project.featured && <span className="featured-pill">Featured · Live</span>}
+            </div>
             <span className="project-tag">{project.tag}</span>
             <h3 className="slide-name">{project.name}</h3>
             <p className="slide-summary">{project.summary}</p>
@@ -251,6 +289,13 @@ function ProjectSlider({ soundEnabled, onOpenModal }) {
             <div className="project-tech">
               {project.tech.map((tech) => <span className="tech-badge" key={tech}>{tech}</span>)}
             </div>
+            {project.links && (
+              <div className="slide-links">
+                {project.links.map(([label, href]) => (
+                  <a key={href} href={href} target="_blank" rel="noopener noreferrer">{label} <ArrowUpRight size={13} /></a>
+                ))}
+              </div>
+            )}
             <button
               className="slide-toggle"
               onClick={() => { if (soundEnabled) playClickSound(); setOpenCard(openCard === i ? null : i); }}
@@ -300,7 +345,7 @@ function CopyEmail() {
   );
 }
 
-export default function Sections({ soundEnabled, onOpenModal }) {
+function Sections({ soundEnabled, onOpenModal }) {
   useReveal();
   const click = () => soundEnabled && playClickSound();
   const hover = () => soundEnabled && playHoverSound();
@@ -309,17 +354,18 @@ export default function Sections({ soundEnabled, onOpenModal }) {
     <>
       <section className="block" id="about">
         <div className="wrap rv">
-          <div className="eyebrow">At a glance</div>
-          <h2 className="block-title">Production operations meets LLM engineering</h2>
+          <div className="eyebrow">At a glance · open to {ROLE_FOCUS}</div>
+          <SplitTitle>Gen AI engineer building agents that cite, verify and fail safe</SplitTitle>
           <p className="lede">
-            I build agentic and retrieval-augmented systems in Python: LangGraph agents with typed tool calls over MCP,
-            embedding-based semantic search on vector databases, and NLP pipelines. My day job running enterprise batch
-            workloads at Kyndryl shapes how I design them: observable, runbook-driven and safe to hand off.
+            I design LLM systems around the failure modes that matter in production: tool-calling agents that plan their own
+            retrieval, hybrid BM25 + embedding search fused with Reciprocal Rank Fusion, claim-level self-verification,
+            explicit refusal when evidence is missing, and graceful fallbacks when the model or rate limit fails. Running
+            enterprise batch workloads at Kyndryl taught me to build for observability, runbooks and clean hand-offs.
           </p>
           <div className="stats">
-            <div className="stat"><CountUp value={6} /><span>Shipped projects</span></div>
+            <div className="stat"><CountUp value={projects.length} /><span>Shipped projects</span></div>
+            <div className="stat"><CountUp value={2} /><span>Agentic AI systems</span></div>
             <div className="stat"><CountUp value={4} /><span>Certifications &amp; programs</span></div>
-            <div className="stat"><CountUp value={2025} /><span>Joined Kyndryl</span></div>
             <div className="stat"><CountUp value={2027} /><span>MCA completion</span></div>
           </div>
           <button className="btn-outline" onClick={() => { click(); onOpenModal('about'); }} onMouseEnter={hover}>
@@ -331,7 +377,7 @@ export default function Sections({ soundEnabled, onOpenModal }) {
       <section className="block block-flush" id="skills">
         <div className="wrap rv">
           <div className="eyebrow">Stack</div>
-          <h2 className="block-title">Tools I build with</h2>
+          <SplitTitle>Models, retrieval, orchestration and serving</SplitTitle>
         </div>
         <SkillMarquee />
         <div className="wrap">
@@ -346,12 +392,26 @@ export default function Sections({ soundEnabled, onOpenModal }) {
         </div>
       </section>
 
+      <section className="block" id="approach">
+        <div className="wrap">
+          <div className="rv">
+            <div className="eyebrow">How I build agents</div>
+            <SplitTitle>Plan, act, cite, verify</SplitTitle>
+            <p className="lede">
+              Classic RAG retrieves once and hopes. My agents control their own retrieval: they decide what to look up,
+              call tools until they have evidence, cite stable source ids and pass a separate verifier before answering.
+            </p>
+          </div>
+          <AgentPipeline />
+        </div>
+      </section>
+
       <section className="block" id="work">
         <div className="wrap">
           <div className="rv">
             <div className="eyebrow">Projects</div>
-            <h2 className="block-title">Selected work</h2>
-            <p className="lede">Use the arrows, drag, or swipe. Each card opens a full Situation, Task, Action, Result case study.</p>
+            <SplitTitle>Selected work</SplitTitle>
+            <p className="lede">Agentic RAG, tool-calling agents, retrieval pipelines and the backends behind them. Use the arrows, drag or swipe; each card opens a full Situation, Task, Action, Result case study.</p>
           </div>
           <ProjectSlider soundEnabled={soundEnabled} onOpenModal={onOpenModal} />
         </div>
@@ -361,7 +421,7 @@ export default function Sections({ soundEnabled, onOpenModal }) {
         <div className="wrap">
           <div className="rv">
             <div className="eyebrow">Journey</div>
-            <h2 className="block-title">Experience and education</h2>
+            <SplitTitle>Experience and education</SplitTitle>
           </div>
           <div className="timeline" id="timeline">
             <div className="timeline-fill" id="timeline-fill" />
@@ -385,7 +445,7 @@ export default function Sections({ soundEnabled, onOpenModal }) {
         <div className="wrap">
           <div className="rv">
             <div className="eyebrow">Certifications</div>
-            <h2 className="block-title">Credentials and programs</h2>
+            <SplitTitle>Credentials and programs</SplitTitle>
           </div>
           <div className="certs rv">
             {certifications.map((cert) => (
@@ -402,11 +462,12 @@ export default function Sections({ soundEnabled, onOpenModal }) {
         <div className="wrap rv contact-grid">
           <div>
             <div className="eyebrow">Contact</div>
-            <h2 className="block-title">Open to AI engineering roles and projects</h2>
+            <SplitTitle>Open to Gen AI and Agentic AI engineering roles</SplitTitle>
+            <p className="lede">LLM agents, RAG systems, tool integrations over MCP and the evaluation and guardrails around them.</p>
             <CopyEmail />
           </div>
           <div className="contact-actions">
-            <a className="btn-solid" href={RESUME_URL} download={RESUME_FILENAME} onClick={click} onMouseEnter={hover}>
+            <a className="btn-solid" data-magnetic href={RESUME_URL} download={RESUME_FILENAME} onClick={click} onMouseEnter={hover}>
               <Download size={16} /> Download Resume
             </a>
             <button className="btn-outline" onClick={() => { click(); onOpenModal('contact'); }} onMouseEnter={hover}>
@@ -418,7 +479,10 @@ export default function Sections({ soundEnabled, onOpenModal }) {
         </div>
       </section>
 
-      <footer className="site-footer">© {new Date().getFullYear()} Keerthana Gandhirajan · React, Vite and a 63-frame canvas avatar</footer>
+      <footer className="site-footer">© {new Date().getFullYear()} Keerthana Gandhirajan · React 19, Vite and a 63-frame canvas gaze tracker</footer>
     </>
   );
 }
+
+// Memoised so scroll-state changes in App (header, scroll spy) don't re-render every section
+export default React.memo(Sections);
