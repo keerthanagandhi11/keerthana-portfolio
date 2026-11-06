@@ -24,6 +24,21 @@ export const SPECIALISMS = [
 
 export const projects = [
   {
+    tag: 'AI Ops Automation · Event-Driven · Escalation',
+    name: 'OnCallPilot: Automated On-Call Escalation for UAC Failures',
+    featured: true,
+    summary: 'Turns a Stonebranch UAC job failure into an AI-triaged Teams alert, a timed call ladder to the on-call team, a DL email and a ServiceNow incident transfer, and stops the moment someone acknowledges.',
+    situation: 'In my SysOps role, every UAC job failure is escalated by hand: screenshot the dashboard, post it in Teams, look up the on-call rota in ServiceNow, phone the primary three times 5 to 10 minutes apart, then the secondary and the manager, email the team DL, and transfer the incident. At night or during failure storms this is slow, error-prone and leaves no audit trail.',
+    task: 'Automate the whole escalation from the UAC failure to the ServiceNow transfer, keep who-gets-called-when deterministic and auditable, and use AI only to explain the failure.',
+    action: 'Built a durable escalation state machine in FastAPI and async SQLAlchemy: every incident stores its next action time, a worker advances due incidents one step at a time, and Postgres row locks make it safe to restart or scale. Failures arrive by UAC webhook, a UAC REST poller, a manual alert, or a vision LLM reading a dashboard screenshot. An LLM (gpt-oss-120b on Groq) writes a schema-validated triage (summary, probable cause, severity, first steps) from the secret-masked job log, with keyword rules as the fallback. Integration adapters cover the ServiceNow On-Call and Table APIs (find the on-call, link the incident, transfer it with a "notified the on-call" work note), Teams Adaptive Cards with HMAC-signed acknowledge links, Microsoft Graph calls and mail, and SMTP, each with a mock for demos. Added storm grouping, auto-resolve on a successful rerun, and a per-alert call interval.',
+    result: 'A live demo on Render with an operator dashboard, Docker and docker-compose, GitHub Actions CI, Prometheus metrics and 70 automated tests, including fake-clock runs of every escalation path. A live end-to-end run of eight scenarios, from "acknowledged in Teams" to "nobody answers" and "Teams is down", passes 8/8 on both the SysOps and app support sides.',
+    tech: ['Event-driven automation', 'State machine', 'LLM triage', 'Vision LLM', 'gpt-oss-120b / Groq', 'FastAPI', 'Async SQLAlchemy', 'ServiceNow API', 'Microsoft Teams / Graph', 'Stonebranch UAC', 'Docker', 'GitHub Actions', 'pytest'],
+    links: [
+      ['Live demo', 'https://oncallpilot.onrender.com'],
+      ['Source', 'https://github.com/keerthanagandhi11/oncallpilot']
+    ]
+  },
+  {
     tag: 'Agentic RAG · Tool Calling · Self-Verification',
     name: 'OpsPilot: Agentic RAG for Incident PDFs',
     featured: true,
@@ -104,7 +119,8 @@ export const skillGroups = [
   ['LLM orchestration & agents', 'Generative AI', 'Agentic AI', 'Tool calling', 'LangGraph', 'Multi-agent systems', 'Subagents', 'MCP', 'Claude API', 'OpenAI-compatible APIs', 'Groq', 'Prompt engineering'],
   ['Retrieval & RAG', 'RAG', 'Agentic RAG', 'Embeddings', 'Semantic search', 'BM25', 'Reciprocal Rank Fusion', 'Chunking strategies', 'Vector databases', 'Pinecone', 'FAISS', 'LangChain', 'LlamaIndex'],
   ['Reliability & evaluation', 'Self-verification', 'Grounded citations', 'Fallback chains', 'Rate limiting', 'Input validation', 'pytest'],
-  ['Serving & data', 'FastAPI', 'Gradio', 'Streamlit', 'REST API design', 'Pydantic', 'Flask', 'Django', 'MongoDB', 'SQL'],
+  ['Serving & data', 'FastAPI', 'Gradio', 'Streamlit', 'REST API design', 'Pydantic', 'Async SQLAlchemy', 'PostgreSQL', 'Flask', 'Django', 'MongoDB', 'SQL'],
+  ['Integrations & automation', 'ServiceNow API', 'Microsoft Teams / Graph', 'Stonebranch UAC', 'Webhooks', 'Event-driven state machines', 'Prometheus metrics'],
   ['ML & NLP', 'NLP', 'Sentiment analysis', 'fastembed / ONNX Runtime', 'PyTorch', 'TensorFlow', 'scikit-learn'],
   ['Engineering', 'Python', 'Java', 'Docker', 'GitHub Actions CI', 'Ruff', 'Git', 'Data structures and algorithms']
 ];

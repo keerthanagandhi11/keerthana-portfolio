@@ -69,8 +69,10 @@ function AboutContent() {
         I'm <strong>Keerthana Gandhirajan</strong>, a Gen AI engineer focused on agentic AI. I build
         tool-calling LLM agents and agentic RAG systems in Python: LangGraph state graphs and custom
         plan-act-verify loops, MCP tool servers, hybrid BM25 + embedding retrieval with Reciprocal Rank
-        Fusion, and claim-level self-verification. My latest system, OpsPilot, is live with page-level
-        citations and a three-tier fallback chain. I run enterprise batch workload operations at Kyndryl
+        Fusion, and claim-level self-verification. My latest system, OnCallPilot, automates the on-call
+        escalation I do by hand at work: AI-triaged Teams alerts, a timed call ladder and ServiceNow
+        transfers. OpsPilot, my agentic RAG system, is live with page-level citations and a three-tier
+        fallback chain. I run enterprise batch workload operations at Kyndryl
         and am completing an MCA, so I design for how AI behaves in production, not just in a notebook.
       </p>
 
