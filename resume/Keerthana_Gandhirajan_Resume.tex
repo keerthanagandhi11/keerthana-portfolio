@@ -18,7 +18,10 @@
 \usepackage{fancyhdr}
 \usepackage[english]{babel}
 \usepackage{tabularx}
-\input{glyphtounicode}
+\usepackage{iftex}
+\ifPDFTeX
+  \input{glyphtounicode} % pdfLaTeX (Overleaf default); XeTeX/LuaTeX write Unicode text natively
+\fi
 
 
 %----------FONT OPTIONS----------
@@ -58,7 +61,9 @@
 }{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
 
 % Ensure that generate pdf is machine readable/ATS parsable
-\pdfgentounicode=1
+\ifPDFTeX
+  \pdfgentounicode=1
+\fi
 
 %-------------------------
 % Custom commands
@@ -120,8 +125,8 @@
 \section{Summary}
  \begin{itemize}[leftmargin=0.15in, label={}]
     \small{\item{
-     Gen AI and Agentic AI engineer building RAG systems and tool-calling LLM agents in Python. Shipped OpsPilot, an agentic
-     RAG app that cites and checks its answers. At Kyndryl, working on workload automation and a mainframe-to-UAC migration.
+     Gen AI engineer building RAG systems, LLM agents and AI ops automation in Python. Shipped OpsPilot (agentic RAG with cited,
+     self-checked answers) and OnCallPilot (AI on-call escalation). At Kyndryl: workload automation, mainframe-to-UAC migration.
     }}
  \end{itemize}
 
@@ -140,6 +145,15 @@
           \resumeItemListEnd
 
       \resumeProjectHeading
+          {\textbf{OnCallPilot: AI On-Call Escalation for UAC Failures} $|$ \emph{Python, FastAPI, SQLAlchemy, Groq, ServiceNow, Teams}}{}
+          \resumeItemListStart
+            \resumeItem{Automated the manual UAC escalation: Teams alert, ServiceNow on-call lookup, call ladder, DL email, ticket transfer}
+            \resumeItem{gpt-oss-120b triages secret-masked job logs into schema-validated JSON (rule fallback); a vision LLM reads screenshots}
+            \resumeItem{A database-backed state machine, not the LLM, decides who to call and when; survives restarts and groups failure storms}
+            \resumeItem{Deployed on Render with Docker and CI; 70 automated tests and an end-to-end run of 8 escalation scenarios (8/8 pass)}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
           {\textbf{IT Operations AI Agent} $|$ \emph{Python, LangGraph, Claude API, Model Context Protocol (MCP)}}{}
           \resumeItemListStart
             \resumeItem{Built a LangGraph workflow on the Claude API that routes each ops request to the right tool via function calling}
@@ -147,15 +161,9 @@
           \resumeItemListEnd
 
       \resumeProjectHeading
-          {\textbf{RAG PDF Chatbot} $|$ \emph{Python, LangChain, Claude API, Embeddings, Vector Database}}{}
+          {\textbf{Additional Projects} $|$ \emph{Python, LangChain, Vector Database, REST APIs, SQL, NLP}}{}
           \resumeItemListStart
-            \resumeItem{Built the full pipeline: extract PDF text, chunk it, embed it and store it in a vector database}
-            \resumeItem{Used LangChain to fetch the closest chunks and prompted Claude to answer only from them}
-          \resumeItemListEnd
-
-      \resumeProjectHeading
-          {\textbf{Additional Projects} $|$ \emph{Python, REST APIs, SQL, NLP}}{}
-          \resumeItemListStart
+            \resumeItem{\textbf{RAG PDF Chatbot:} LangChain retrieval over embedded PDF chunks in a vector DB; Claude answers only from them}
             \resumeItem{\textbf{Job Notification API:} REST backend that sends real-time job alerts filtered by role, location and keywords}
             \resumeItem{\textbf{X Sentiment Analysis:} pulled posts from the X API, cleaned the text and labeled each one positive, negative or neutral}
           \resumeItemListEnd
@@ -187,9 +195,9 @@
      \textbf{Agentic AI}{: Tool Calling, Multi-Agent Systems, Subagents, LangGraph, MCP, Google ADK, CrewAI, AutoGen} \\
      \textbf{RAG \& Vector DBs}{: Agentic RAG, Hybrid Search, Embeddings, LangChain, LlamaIndex, ChromaDB, Pinecone, FAISS} \\
      \textbf{Evaluation \& Safety}{: RAGAS, Eval Sets, LLM-as-Judge, Guardrails, Hallucination Mitigation, LangSmith (Observability)} \\
-     \textbf{ML \& Data}{: Machine Learning, NLP, PyTorch, TensorFlow, MongoDB, SQL Databases, Data Visualization} \\
+     \textbf{ML \& Data}{: Machine Learning, NLP, PyTorch, TensorFlow, PostgreSQL, SQLAlchemy, MongoDB, Data Visualization} \\
      \textbf{Backend \& Cloud}{: FastAPI, Flask, Django, REST APIs, Gradio, Streamlit, Docker, AWS, GitHub Actions CI/CD, pytest} \\
-     \textbf{Automation \& Ops}{: Stonebranch UAC, Mainframe Modernization, Workload Automation, n8n, Runbooks, Incident Triage}
+     \textbf{Automation \& Ops}{: Stonebranch UAC, ServiceNow, Teams/Graph API, Workload Automation, Mainframe Migration, n8n, Incident Triage}
     }}
  \end{itemize}
 
